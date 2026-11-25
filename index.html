@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiapASN - Platform Latihan & Simulasi CAT CPNS SKD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            200: '#bcccdc',
+                            300: '#9fb3c8',
+                            400: '#829ab1',
+                            500: '#627d98',
+                            600: '#486581',
+                            700: '#334e68',
+                            800: '#243b53',
+                            900: '#102a43',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .fire-pulse {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); }
+            50% { transform: scale(1.12); filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9)); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header class="bg-navy-900 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+                    <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-navy-900 font-extrabold text-xl shadow-inner">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight block leading-none">Siap<span class="text-amber-400">ASN</span></span>
+                        <span class="text-[11px] text-navy-200 font-medium tracking-wider uppercase">Simulasi SKD CPNS</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-1">
+                    <button onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-navy-800 text-amber-400">
+                        <i class="fa-solid fa-house mr-2"></i>Dashboard
+                    </button>
+                    <button onclick="navigateTo('materi')" id="nav-materi" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-navy-100 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-book-open mr-2"></i>Materi SKD
+                    </button>
+                    <button onclick="navigateTo('latihan')" id="nav-latihan" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-navy-100 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-laptop-file mr-2"></i>Latihan & Tryout CAT
+                    </button>
+                    <button onclick="navigateTo('riwayat')" id="nav-riwayat" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-navy-100 hover:bg-navy-800 hover:text-white transition-colors">
+                        <i class="fa-solid fa-chart-line mr-2"></i>Statistik & Riwayat
+                    </button>
+                </nav>
+
+                <!-- Streak Badge Header -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-navy-800 border border-navy-700 px-3 py-1.5 rounded-full flex items-center space-x-2" title="Daily Streak Belajar Anda">
+                        <i id="header-fire-icon" class="fa-solid fa-fire text-amber-400 text-base"></i>
+                        <span id="header-streak-count" class="text-sm font-bold text-white">0 Hari</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom/Sub Navigation -->
+        <div class="md:hidden bg-navy-800 border-t border-navy-700 flex justify-around py-2 px-1">
+            <button onclick="navigateTo('dashboard')" id="mnav-dashboard" class="mnav-btn flex flex-col items-center text-xs text-amber-400 font-medium px-2 py-1">
+                <i class="fa-solid fa-house text-base mb-1"></i>Beranda
+            </button>
+            <button onclick="navigateTo('materi')" id="mnav-materi" class="mnav-btn flex flex-col items-center text-xs text-navy-200 font-medium px-2 py-1">
+                <i class="fa-solid fa-book-open text-base mb-1"></i>Materi
+            </button>
+            <button onclick="navigateTo('latihan')" id="mnav-latihan" class="mnav-btn flex flex-col items-center text-xs text-navy-200 font-medium px-2 py-1">
+                <i class="fa-solid fa-laptop-file text-base mb-1"></i>Tryout CAT
+            </button>
+            <button onclick="navigateTo('riwayat')" id="mnav-riwayat" class="mnav-btn flex flex-col items-center text-xs text-navy-200 font-medium px-2 py-1">
+                <i class="fa-solid fa-chart-line text-base mb-1"></i>Riwayat
+            </button>
+        </div>
+    </header>
+
+    <!-- Toast / Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Custom Modal Confirmation (Replacing confirm/alert) -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
+            <div class="flex items-center space-x-3 mb-3">
+                <div id="modal-icon-bg" class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+                    <i id="modal-icon" class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 id="modal-title" class="text-lg font-bold text-slate-900">Konfirmasi</h3>
+            </div>
+            <p id="modal-message" class="text-slate-600 text-sm mb-6 leading-relaxed">Apakah Anda yakin?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="modal-cancel-btn" onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Batal</button>
+                <button id="modal-confirm-btn" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-navy-800 hover:bg-navy-900 transition shadow-sm">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+        <section id="view-dashboard" class="view-section space-y-6">
+            <!-- Hero Greeting & Streak Banner -->
+            <div class="bg-gradient-to-r from-navy-900 via-navy-800 to-navy-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-8 -translate-y-4">
+                    <i class="fa-solid fa-award text-[180px]"></i>
+                </div>
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                            <i class="fa-solid fa-sparkles mr-1.5"></i> Kisi-Kisi Standar BKN & PermenPAN-RB Terbaru
+                        </span>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang, Pejuang NIP!</h1>
+                        <p class="text-navy-100 text-sm sm:text-base leading-relaxed">
+                            Konsistensi adalah kunci menembus <em>Passing Grade</em> dan perangkingan SKD CPNS. Jaga nyala api belajar harianmu dan taklukkan soal HOTS TWK, TIU, dan TKP.
+                        </p>
+                        <div class="pt-3 flex flex-wrap gap-3">
+                            <button onclick="startQuizMode('tryout', 'ALL')" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-navy-950 font-bold text-sm rounded-xl shadow-md transition flex items-center">
+                                <i class="fa-solid fa-stopwatch mr-2"></i> Mulai Simulasi CAT
+                            </button>
+                            <button onclick="navigateTo('materi')" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-xl border border-white/20 transition flex items-center">
+                                <i class="fa-solid fa-book-open mr-2"></i> Pelajari Materi
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Daily Streak Card -->
+                    <div class="bg-navy-950/60 backdrop-blur-md border border-navy-700/80 rounded-2xl p-5 min-w-[280px] sm:min-w-[320px]">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-navy-300">Daily Learning Streak</p>
+                                <div class="flex items-baseline space-x-2 mt-0.5">
+                                    <span id="dash-streak-number" class="text-3xl font-extrabold text-amber-400">0</span>
+                                    <span class="text-sm font-medium text-navy-200">Hari Berturut-turut</span>
+                                </div>
+                            </div>
+                            <div id="dash-fire-wrapper" class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
+                                <i id="dash-fire-icon" class="fa-solid fa-fire text-2xl text-amber-400"></i>
+                            </div>
+                        </div>
+                        <p id="dash-streak-status" class="text-xs text-amber-200/90 mb-3">
+                            Selesaikan 1 materi atau latihan soal hari ini untuk menyalakan streak!
+                        </p>
+                        <!-- 7-Day Activity Tracker -->
+                        <div class="grid grid-cols-7 gap-1.5 text-center" id="weekly-streak-calendar">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Total Soal Dikerjakan</p>
+                        <p id="stat-total-questions" class="text-2xl font-extrabold text-slate-900">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Skor Tryout Tertinggi</p>
+                        <p id="stat-highest-score" class="text-2xl font-extrabold text-slate-900">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Materi Dikuasai</p>
+                        <p class="text-2xl font-extrabold text-slate-900"><span id="stat-materi-done">0</span><span class="text-sm font-medium text-slate-400" id="stat-materi-total">/14</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Akurasi TWK & TIU</p>
+                        <p id="stat-accuracy" class="text-2xl font-extrabold text-slate-900">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passing Grade Info & Quick Category Practice -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Quick Practice Cards -->
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Latihan Fokus Per Subtes</h2>
+                            <p class="text-xs text-slate-500">Pilih kategori untuk latihan soal santai dengan pembahasan langsung</p>
+                        </div>
+                        <button onclick="navigateTo('latihan')" class="text-xs font-bold text-navy-700 hover:text-navy-900">Semua Mode &rarr;</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- TWK Card -->
+                        <div class="border border-slate-200 rounded-xl p-4 hover:border-navy-400 hover:shadow-md transition flex flex-col justify-between bg-slate-50/50">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-700">TWK</span>
+                                    <span class="text-xs font-semibold text-slate-500">PG: 65</span>
+                                </div>
+                                <h3 class="font-bold text-slate-900 text-sm mb-1">Tes Wawasan Kebangsaan</h3>
+                                <p class="text-xs text-slate-600 mb-4">Nasionalisme, Integritas, Bela Negara, Pilar Negara & Bahasa Indonesia.</p>
+                            </div>
+                            <button onclick="startQuizMode('santuy', 'TWK')" class="w-full py-2 bg-white border border-slate-300 hover:bg-navy-800 hover:text-white hover:border-navy-800 text-slate-800 font-semibold text-xs rounded-lg transition">
+                                Latihan TWK
+                            </button>
+                        </div>
+
+                        <!-- TIU Card -->
+                        <div class="border border-slate-200 rounded-xl p-4 hover:border-navy-400 hover:shadow-md transition flex flex-col justify-between bg-slate-50/50">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-700">TIU</span>
+                                    <span class="text-xs font-semibold text-slate-500">PG: 80</span>
+                                </div>
+                                <h3 class="font-bold text-slate-900 text-sm mb-1">Tes Intelegensia Umum</h3>
+                                <p class="text-xs text-slate-600 mb-4">Verbal (Analogi, Silogisme, Analitis), Numerik (Deret, Berhitung), Figural.</p>
+                            </div>
+                            <button onclick="startQuizMode('santuy', 'TIU')" class="w-full py-2 bg-white border border-slate-300 hover:bg-navy-800 hover:text-white hover:border-navy-800 text-slate-800 font-semibold text-xs rounded-lg transition">
+                                Latihan TIU
+                            </button>
+                        </div>
+
+                        <!-- TKP Card -->
+                        <div class="border border-slate-200 rounded-xl p-4 hover:border-navy-400 hover:shadow-md transition flex flex-col justify-between bg-slate-50/50">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-700">TKP</span>
+                                    <span class="text-xs font-semibold text-slate-500">PG: 166</span>
+                                </div>
+                                <h3 class="font-bold text-slate-900 text-sm mb-1">Tes Karakteristik Pribadi</h3>
+                                <p class="text-xs text-slate-600 mb-4">Pelayanan Publik, Jejaring Kerja, Sosial Budaya, TIK, Profesionalisme, Anti Radikalisme.</p>
+                            </div>
+                            <button onclick="startQuizMode('santuy', 'TKP')" class="w-full py-2 bg-white border border-slate-300 hover:bg-navy-800 hover:text-white hover:border-navy-800 text-slate-800 font-semibold text-xs rounded-lg transition">
+                                Latihan TKP
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passing Grade Standard Card -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-scale-balanced text-navy-700"></i>
+                            <h2 class="text-base font-bold text-slate-900">Nilai Ambang Batas (PG)</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-4">Standar kelulusan SKD CPNS Jalur Umum sesuai KepmenPAN-RB:</p>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-800 block">TWK (30 Soal)</span>
+                                    <span class="text-[11px] text-slate-500">Benar +5, Salah/Kosong 0</span>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-md bg-navy-100 text-navy-900 font-extrabold text-xs">Min. 65</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-800 block">TIU (35 Soal)</span>
+                                    <span class="text-[11px] text-slate-500">Benar +5, Salah/Kosong 0</span>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-md bg-navy-100 text-navy-900 font-extrabold text-xs">Min. 80</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-800 block">TKP (45 Soal)</span>
+                                    <span class="text-[11px] text-slate-500">Skala Poin 1 - 5</span>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-md bg-navy-100 text-navy-900 font-extrabold text-xs">Min. 166</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-medium">Skor Maksimal SKD:</span>
+                        <span class="font-extrabold text-navy-900">550 Poin</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 2: MATERI PEMBELAJARAN ==================== -->
+        <section id="view-materi" class="view-section hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900">Modul Materi Pembelajaran SKD</h1>
+                    <p class="text-sm text-slate-600 mt-1">Pelajari konsep kunci dan trik cepat menjawab soal standar CPNS 2024. Tandai selesai untuk menjaga <em>streak</em>!</p>
+                </div>
+                <!-- Filter Tabs -->
+                <div class="flex bg-slate-100 p-1 rounded-xl self-start">
+                    <button onclick="filterMateri('ALL')" id="tab-materi-ALL" class="materi-tab px-4 py-2 rounded-lg text-xs font-bold bg-white text-navy-900 shadow-sm transition">Semua</button>
+                    <button onclick="filterMateri('TWK')" id="tab-materi-TWK" class="materi-tab px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">TWK</button>
+                    <button onclick="filterMateri('TIU')" id="tab-materi-TIU" class="materi-tab px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">TIU</button>
+                    <button onclick="filterMateri('TKP')" id="tab-materi-TKP" class="materi-tab px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">TKP</button>
+                </div>
+            </div>
+
+            <!-- Materi Cards Grid -->
+            <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 3: PILIHAN MODE LATIHAN & TRYOUT ==================== -->
+        <section id="view-latihan" class="view-section hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                <h1 class="text-2xl font-extrabold text-slate-900">Pusat Latihan & Simulasi CAT CPNS</h1>
+                <p class="text-sm text-slate-600 mt-1">Pilih mode pengerjaan yang sesuai dengan target belajar Anda hari ini.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Mode 1: Simulasi Tryout CAT -->
+                <div class="bg-gradient-to-br from-navy-900 to-navy-800 text-white rounded-2xl p-6 sm:p-8 shadow-lg flex flex-col justify-between border border-navy-700">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-navy-950">REKOMENDASI UTAMA</span>
+                            <i class="fa-solid fa-desktop text-2xl text-amber-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-extrabold mb-2">Simulasi Tryout CAT SKD Lengkap</h2>
+                        <p class="text-navy-100 text-sm mb-6 leading-relaxed">
+                            Simulasi ujian sesungguhnya dengan kombinasi soal TWK, TIU, dan TKP standar HOTS CPNS 2024. Dilengkapi penghitung waktu mundur, navigasi nomor soal, fitur Ragu-Ragu, serta evaluasi kelulusan <em>Passing Grade</em>.
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-navy-100 mb-8">
+                            <li class="flex items-center"><i class="fa-solid fa-check-circle text-amber-400 mr-2.5"></i> 21 Soal Terpilih (TWK, TIU, TKP Terintegrasi)</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check-circle text-amber-400 mr-2.5"></i> Durasi Waktu Simulasi: 25 Menit (Proporsional CAT BKN)</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check-circle text-amber-400 mr-2.5"></i> Penilaian Otomatis & Pembahasan Lengkap di Akhir</li>
+                        </ul>
+                    </div>
+                    <button onclick="startQuizMode('tryout', 'ALL')" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-navy-950 font-extrabold text-sm rounded-xl shadow-md transition flex items-center justify-center">
+                        <i class="fa-solid fa-play mr-2"></i> Mulai Simulasi CAT Sekarang
+                    </button>
+                </div>
+
+                <!-- Mode 2: Latihan Santai Per Kategori -->
+                <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">MODE BELAJAR</span>
+                            <i class="fa-solid fa-lightbulb text-2xl text-blue-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Latihan Santai + Pembahasan Langsung</h2>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Cocok untuk memperdalam pemahaman konsep. Tanpa tekanan timer—begitu Anda memilih jawaban, kunci jawaban dan pembahasan lengkap langsung muncul di layar.
+                        </p>
+                        <div class="space-y-3 mb-6">
+                            <button onclick="startQuizMode('santuy', 'ALL')" class="w-full p-3.5 rounded-xl border border-slate-200 hover:border-navy-600 hover:bg-navy-50/50 transition flex items-center justify-between text-left group">
+                                <div>
+                                    <span class="font-bold text-sm text-slate-900 block group-hover:text-navy-900">Paket Campuran SKD (21 Soal)</span>
+                                    <span class="text-xs text-slate-500">Latihan seluruh subtes TWK, TIU, dan TKP</span>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-navy-700"></i>
+                            </button>
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <button onclick="startQuizMode('santuy', 'TWK')" class="p-3 rounded-xl border border-slate-200 hover:border-red-500 hover:bg-red-50/40 transition text-center">
+                                    <span class="block font-extrabold text-sm text-red-700">TWK</span>
+                                    <span class="text-[11px] text-slate-500">7 Soal</span>
+                                </button>
+                                <button onclick="startQuizMode('santuy', 'TIU')" class="p-3 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition text-center">
+                                    <span class="block font-extrabold text-sm text-blue-700">TIU</span>
+                                    <span class="text-[11px] text-slate-500">7 Soal</span>
+                                </button>
+                                <button onclick="startQuizMode('santuy', 'TKP')" class="p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 transition text-center">
+                                    <span class="block font-extrabold text-sm text-emerald-700">TKP</span>
+                                    <span class="text-[11px] text-slate-500">7 Soal</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 4: CAT QUIZ INTERFACE ==================== -->
+        <section id="view-quiz" class="view-section hidden space-y-5">
+            <!-- Top Quiz Bar -->
+            <div class="bg-white rounded-2xl p-4 sm:px-6 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <span id="quiz-mode-badge" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-navy-900 text-white uppercase tracking-wider">TRYOUT CAT</span>
+                    <span id="quiz-category-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">Subtes: TWK</span>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Timer Display (Only in Tryout Mode) -->
+                    <div id="quiz-timer-box" class="flex items-center space-x-2 bg-red-50 border border-red-200 text-red-700 px-3.5 py-1.5 rounded-xl font-mono font-bold text-sm">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="quiz-timer">25:00</span>
+                    </div>
+
+                    <button onclick="confirmFinishQuiz()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-sm transition">
+                        <i class="fa-solid fa-flag-checkered mr-1.5"></i> Selesai Ujian
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Quiz Grid: Left Question Area + Right Navigation Panel -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left: Question & Options (8 cols) -->
+                <div class="lg:col-span-8 space-y-4">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+                            <span class="text-sm font-extrabold text-navy-900">Soal Nomor <span id="q-current-num" class="text-lg">1</span> <span class="text-slate-400 font-normal">dari <span id="q-total-num">21</span></span></span>
+                            <span id="q-subtopic-label" class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">Nasionalisme</span>
+                        </div>
+
+                        <!-- Question Text -->
+                        <div id="q-text" class="text-slate-800 text-sm sm:text-base leading-relaxed font-medium mb-6 whitespace-pre-line">
+                            <!-- Question text injected here -->
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-3">
+                            <!-- Options A-E injected here -->
+                        </div>
+
+                        <!-- Instant Explanation Box (For 'santuy' mode) -->
+                        <div id="instant-explanation-box" class="hidden mt-6 p-5 rounded-xl bg-blue-50/80 border border-blue-200">
+                            <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm mb-2">
+                                <i class="fa-solid fa-circle-info text-blue-600"></i>
+                                <span id="instant-exp-header">Pembahasan Soal</span>
+                            </div>
+                            <p id="instant-exp-text" class="text-xs sm:text-sm text-slate-700 leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <button id="btn-prev-q" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition disabled:opacity-40">
+                            <i class="fa-solid fa-chevron-left mr-1.5"></i> Sebelumnya
+                        </button>
+
+                        <button id="btn-ragu" onclick="toggleRagu()" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300 transition">
+                            <i class="fa-solid fa-question-circle mr-1.5"></i> Ragu-Ragu
+                        </button>
+
+                        <button id="btn-next-q" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-navy-800 hover:bg-navy-900 text-white transition">
+                            Selanjutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Question Matrix Navigation (4 cols) -->
+                <div class="lg:col-span-4">
+                    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm sticky top-24">
+                        <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center justify-between">
+                            <span>Navigasi Nomor Soal</span>
+                            <span id="answered-counter" class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">0/21 Dijawab</span>
+                        </h3>
+
+                        <!-- Legend -->
+                        <div class="grid grid-cols-3 gap-2 text-[11px] text-slate-600 mb-4 pb-3 border-b border-slate-100">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span><span>Dijawab</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded bg-amber-400 inline-block"></span><span>Ragu</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="w-3 h-3 rounded bg-slate-200 inline-block"></span><span>Kosong</span>
+                            </div>
+                        </div>
+
+                        <!-- Numbers Grid -->
+                        <div id="quiz-nav-grid" class="grid grid-cols-5 sm:grid-cols-7 lg:grid-cols-5 gap-2 max-h-[320px] overflow-y-auto pr-1">
+                            <!-- Number buttons rendered by JS -->
+                        </div>
+
+                        <div class="mt-5 pt-4 border-t border-slate-100">
+                            <button onclick="confirmQuitQuiz()" class="w-full py-2 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg transition">
+                                <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Keluar Tanpa Menyimpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 5: HASIL & PEMBAHASAN ==================== -->
+        <section id="view-result" class="view-section hidden space-y-6">
+            <!-- Result Summary Banner -->
+            <div id="result-banner" class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                    <div>
+                        <span id="result-status-badge" class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide bg-emerald-100 text-emerald-800 mb-2">
+                            <i class="fa-solid fa-circle-check mr-1.5"></i> LULUS PASSING GRADE
+                        </span>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Hasil Evaluasi Latihan SKD</h1>
+                        <p id="result-subtitle" class="text-sm text-slate-500 mt-1">Skor Anda telah dikonversi ke skala standar BKN untuk simulasi kelulusan.</p>
+                    </div>
+                    <div class="bg-navy-900 text-white px-6 py-4 rounded-2xl text-center min-w-[180px]">
+                        <span class="text-xs uppercase tracking-wider text-navy-300 font-semibold block">Total Skor SKD</span>
+                        <span id="result-total-score" class="text-4xl font-extrabold text-amber-400">0</span>
+                        <span class="text-xs text-navy-300 block mt-0.5">Maksimal 550</span>
+                    </div>
+                </div>
+
+                <!-- Subtest Breakdown Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6" id="result-breakdown-grid">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <div class="mt-6 pt-5 border-t border-slate-100 flex flex-wrap gap-3 justify-end">
+                    <button onclick="navigateTo('dashboard')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+                        Kembali ke Beranda
+                    </button>
+                    <button onclick="navigateTo('latihan')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-navy-800 hover:bg-navy-900 text-white transition">
+                        Latihan Lagi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answer Key & Explanations -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-extrabold text-slate-900 mb-1">Pembahasan Detail Setiap Nomor</h2>
+                <p class="text-xs text-slate-500 mb-6">Pelajari kembali soal yang keliru atau poin TKP yang belum mencapai skor maksimal (5).</p>
+                <div id="result-review-list" class="space-y-6">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 6: RIWAYAT & STATISTIK ==================== -->
+        <section id="view-riwayat" class="view-section hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900">Riwayat & Statistik Progres</h1>
+                    <p class="text-sm text-slate-600 mt-1">Rekam jejak hasil pengerjaan simulasi CAT dan latihan harian Anda.</p>
+                </div>
+                <button onclick="confirmResetData()" class="px-4 py-2 rounded-xl text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition self-start">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i> Reset Semua Progres
+                </button>
+            </div>
+
+            <!-- Visual Bar Chart of Recent Attempts -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                <h2 class="text-base font-bold text-slate-900 mb-4">Grafik Perkembangan Skor Terakhir</h2>
+                <div id="history-chart-container" class="h-52 flex items-end space-x-3 sm:space-x-6 pt-6 pb-2 px-2 border-b border-slate-200 overflow-x-auto">
+                    <!-- Chart bars injected by JS -->
+                </div>
+            </div>
+
+            <!-- History Table / List -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-100">
+                    <h2 class="text-base font-bold text-slate-900">Log Pengerjaan Latihan & Tryout</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
+                                <th class="py-3.5 px-5 font-bold">Tanggal & Waktu</th>
+                                <th class="py-3.5 px-5 font-bold">Mode & Kategori</th>
+                                <th class="py-3.5 px-5 font-bold">Rincian Skor (Konversi)</th>
+                                <th class="py-3.5 px-5 font-bold">Total Skor</th>
+                                <th class="py-3.5 px-5 font-bold">Status PG</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="divide-y divide-slate-100 text-sm">
+                            <!-- Rows rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-navy-900">SiapASN</span>
+                <span>&bull;</span>
+                <span>Platform Persiapan Seleksi Kompetensi Dasar CPNS</span>
+            </div>
+            <p>Progres belajar & <em>streak</em> tersimpan otomatis di browser Anda.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // ==================== 1. DATABASE MATERI SKD (KISI-KISI 2024) ====================
+        const MATERI_DATA = [
+            // TWK
+            {
+                id: 'twk-1',
+                category: 'TWK',
+                subtopic: 'Nasionalisme',
+                title: 'Implementasi Nasionalisme & Wawasan Nusantara',
+                summary: 'Soal TWK 2024 menekankan penalaran implementatif (bukan sekadar hafalan sejarah), yaitu bagaimana sikap warga negara mewujudkan persatuan di tengah keberagaman dan disrupsi digital.',
+                tips: [
+                    'Pilih opsi yang mengutamakan kepentingan bangsa/persatuan di atas kepentingan golongan atau pribadi.',
+                    'Bedakan Nasionalisme (cinta tanah air & persatuan) dengan Patriotisme (rela berkorban membela negara).',
+                    'Perhatikan konteks isu terkini seperti menangkal hoaks pemecah belah dan bangga produk dalam negeri.'
+                ]
+            },
+            {
+                id: 'twk-2',
+                category: 'TWK',
+                subtopic: 'Integritas',
+                title: 'Nilai Anti-Korupsi & Integritas ASN (KPK)',
+                summary: 'Mengukur konsistensi antara ucapan, keyakinan, dan tindakan jujur seorang calon ASN dalam menghadapi godaan gratifikasi, suap, maupun konflik kepentingan.',
+                tips: [
+                    'Ingat 9 Nilai Integritas KPK (JuPeMaBiTaKeKerBeAd): Jujur, Peduli, Mandiri, Disiplin, Tanggung Jawab, Kerja Keras, Sederhana, Berani, Adil.',
+                    'Gratifikasi yang berhubungan dengan jabatan wajib dilaporkan ke KPK maksimal 30 hari kerja.',
+                    'Pilih tindakan yang paling tegas menolak penyimpangan prosedur meski diperintah atasan sekalipun.'
+                ]
+            },
+            {
+                id: 'twk-3',
+                category: 'TWK',
+                subtopic: 'Bela Negara',
+                title: 'Kesadaran Bela Negara & Ancaman Non-Militer',
+                summary: 'Berdasarkan Pasal 27 Ayat (3) UUD 1945 dan UU No. 23 Tahun 2019, bela negara tidak hanya mengangkat senjata, melainkan pengabdian sesuai profesi.',
+                tips: [
+                    '5 Nilai Dasar Bela Negara: Cinta tanah air, Sadar berbangsa & bernegara, Setia pada Pancasila, Rela berkorban, Kemampuan awal bela negara.',
+                    'Untuk ASN, bekerja secara profesional, melayani publik tanpa diskriminasi, dan menjaga rahasia negara adalah wujud bela negara.'
+                ]
+            },
+            {
+                id: 'twk-4',
+                category: 'TWK',
+                subtopic: 'Pilar Negara',
+                title: 'Pancasila, UUD 1945, NKRI & Bhinneka Tunggal Ika',
+                summary: 'Memahami kedudukan Pancasila sebagai sumber dari segala sumber hukum, struktur kelembagaan negara pasca-amandemen UUD 1945, serta otonomi daerah.',
+                tips: [
+                    'Pahami pengamalan butir-butir Pancasila (Sila 1 s.d. Sila 5) dalam studi kasus kehidupan sehari-hari.',
+                    'Ketahui wewenang lembaga negara: MK (uji UU terhadap UUD, sengketa pemilu), MA (kasasi, uji peraturan di bawah UU), KY (mengawasi perilaku hakim).'
+                ]
+            },
+            {
+                id: 'twk-5',
+                category: 'TWK',
+                subtopic: 'Bahasa Indonesia',
+                title: 'Kalimat Efektif, Ide Pokok & EYD V',
+                summary: 'Menguji kemampuan memahami bacaan panjang secara cepat, menentukan gagasan utama paragraf, serta ketepatan penggunaan ejaan baku (EYD Edisi V).',
+                tips: [
+                    'Baca pertanyaan terlebih dahulu sebelum membaca teks panjang agar fokus mencari kata kunci.',
+                    'Syarat kalimat efektif: memiliki minimal Subjek (S) dan Predikat (P), tidak bermakna ganda (ambigu), dan hemat kata (tidak pleonasme).'
+                ]
+            },
+
+            // TIU
+            {
+                id: 'tiu-1',
+                category: 'TIU',
+                subtopic: 'Kemampuan Verbal',
+                title: 'Analogi, Silogisme & Penalaran Analitis',
+                summary: 'Mengukur kemampuan logika bahasa dan penarikan kesimpulan yang sah dari premis-premis yang diberikan tanpa menggunakan asumsi pribadi.',
+                tips: [
+                    'Analogi: Buat kalimat penghubung yang spesifik antara dua kata di soal (misal: "X adalah alat untuk Y").',
+                    'Silogisme Modus Ponens (P -> Q, P maka Q) dan Modus Tollens (P -> Q, ~Q maka ~P). Ingat negasi dari "Semua" adalah "Beberapa/Ada... tidak".',
+                    'Analitis: Gunakan simbol pertidaksamaan (<, >) atau tabel matriks sederhana untuk soal urutan posisi/jadwal.'
+                ]
+            },
+            {
+                id: 'tiu-2',
+                category: 'TIU',
+                subtopic: 'Kemampuan Numerik',
+                title: 'Deret Angka, Perbandingan & Soal Cerita',
+                summary: 'Menguji ketelitian berhitung cepat, pola barisan bilangan, perbandingan senilai/berbalik nilai, serta aritmetika sosial (untung, rugi, diskon, kecepatan).',
+                tips: [
+                    'Deret Angka: Cek selisih antar suku (1 tingkat atau 2 tingkat). Jika angka melompat jauh, curigai pola perkalian, kuadrat, atau pola lompat 1-2 angka (larik).',
+                    'Perbandingan Senilai (kali silang) vs Berbalik Nilai (kali lurus, misal: jumlah pekerja vs waktu selesai).',
+                    'Hafalkan pecahan istimewa: 1/8 = 12,5%, 1/6 = 16,67%, 3/8 = 37,5%, 5/8 = 62,5% untuk mempercepat hitung persentase.'
+                ]
+            },
+            {
+                id: 'tiu-3',
+                category: 'TIU',
+                subtopic: 'Kemampuan Figural',
+                title: 'Analogi Gambar, Ketidaksamaan & Serial Figural',
+                summary: 'Mengukur kemampuan visualisasi ruang, rotasi gambar, pencerminan, serta konsistensi perubahan elemen bentuk.',
+                tips: [
+                    'Fokus pada SATU elemen kecil terlebih dahulu (misal: titik hitam atau arah panah), ikuti perputarannya (searah/berlawanan jarum jam).',
+                    'Eliminasi pilihan jawaban yang pasti salah berdasarkan jumlah sisi atau warna arsiran.'
+                ]
+            },
+
+            // TKP
+            {
+                id: 'tkp-1',
+                category: 'TKP',
+                subtopic: 'Pelayanan Publik',
+                title: 'Orientasi Kepuasan Masyarakat & Solutif',
+                summary: 'Menilai kemampuan menampilkan perilaku keramahtamahan dalam bekerja yang efektif agar bisa memenuhi kebutuhan dan kepuasan orang lain sesuai tugas dan wewenang.',
+                tips: [
+                    'Pilih jawaban yang paling menguntungkan masyarakat/pengguna layanan, cepat, ramah, dan sesuai SOP.',
+                    'Jika ada keluhan masyarakat, langkah pertama adalah mendengarkan dengan empati, meminta maaf atas ketidaknyamanan, lalu segera mencarikan solusi.'
+                ]
+            },
+            {
+                id: 'tkp-2',
+                category: 'TKP',
+                subtopic: 'Jejaring Kerja',
+                title: 'Kolaborasi, Sinergi & Membangun Relasi',
+                summary: 'Mengukur kemampuan membangun dan membina hubungan, bekerja sama, berbagi informasi dan berkolaborasi dengan orang lain secara efektif.',
+                tips: [
+                    'Pilih opsi yang menunjukkan sikap terbuka, mau berdiskusi, menghargai pendapat rekan kerja, dan memperluas koneksi profesional.',
+                    'Hindari opsi yang bersikap individualis, menutup diri, atau melempar tanggung jawab tim.'
+                ]
+            },
+            {
+                id: 'tkp-3',
+                category: 'TKP',
+                subtopic: 'Sosial Budaya',
+                title: 'Adaptasi Keberagaman & Kepekaan Sosial',
+                summary: 'Menilai kemampuan beradaptasi dan bekerja secara efektif dalam masyarakat majemuk (agama, suku, budaya, nilai) serta peka terhadap lingkungan sekitar.',
+                tips: [
+                    'Pilih jawaban yang menunjukkan toleransi tinggi, menghormati adat setempat saat ditempatkan di daerah baru, dan tidak diskriminatif.',
+                    'Jaga keharmonisan dan hindari konflik SARA di lingkungan kerja maupun masyarakat.'
+                ]
+            },
+            {
+                id: 'tkp-4',
+                category: 'TKP',
+                subtopic: 'Teknologi Informasi (TIK)',
+                title: 'Adaptif Terhadap Digitalisasi & Keamanan Data',
+                summary: 'Mengukur kemampuan memanfaatkan teknologi informasi secara efektif untuk meningkatkan kinerja serta menjaga keamanan siber instansi.',
+                tips: [
+                    'Pilih jawaban yang antusias mempelajari aplikasi/sistem baru dan mengajak rekan kerja ikut beradaptasi.',
+                    'Waspadai keamanan data: jangan sembarangan membagikan password/OTP atau membuka tautan mencurigakan.'
+                ]
+            },
+            {
+                id: 'tkp-5',
+                category: 'TKP',
+                subtopic: 'Profesionalisme',
+                title: 'Tanggung Jawab, Fokus & Integritas Kerja',
+                summary: 'Mengukur kemampuan melaksanakan tugas dan fungsi sesuai tuntutan jabatan dengan penuh tanggung jawab meski menghadapi hambatan atau urusan pribadi.',
+                tips: [
+                    'Utamakan penyelesaian tugas kantor yang mendesak dibandingkan urusan pribadi (kecuali kondisi darurat jiwa yang bisa didelegasikan secara resmi).',
+                    'Tetap tenang, fokus, dan mencari solusi kreatif saat menghadapi target ketat.'
+                ]
+            },
+            {
+                id: 'tkp-6',
+                category: 'TKP',
+                subtopic: 'Anti Radikalisme',
+                title: 'Deteksi Dini & Penolakan Paham Ekstremisme',
+                summary: 'Menjaring informasi tentang pengetahuan individu terhadap anti radikalisme, kecenderungan bersikap, dan bertindak saat menanggapi stimulus terkait paham radikal.',
+                tips: [
+                    'Pilih tindakan yang tegas menolak paham kekerasan/anti-Pancasila, namun tetap mengedepankan edukasi, dialog persuasif, dan pelaporan ke pihak berwenang.',
+                    'Jangan bersikap apatis/membiarkan penyebaran paham radikal di lingkungan kantor atau media sosial.'
+                ]
+            }
+        ];
+
+        // ==================== 2. BANK SOAL CPNS SKD STANDAR 2024 (21 SOAL HOTS) ====================
+        const QUESTIONS_BANK = [
+            // --- TWK (7 Soal: No 1 - 7) ---
+            {
+                id: 'q1',
+                category: 'TWK',
+                subtopic: 'Nasionalisme',
+                question: 'Di era keterbukaan informasi digital, banyak konten kreator luar negeri yang mempopulerkan budaya asing sehingga generasi muda mulai melupakan kesenian daerah. Sebagai seorang ASN yang bertugas di bidang kebudayaan, langkah paling strategis yang mencerminkan semangat nasionalisme modern adalah...',
+                options: [
+                    'Melarang seluruh konten budaya asing masuk ke platform digital nasional demi menjaga kemurnian budaya lokal.',
+                    'Mewajibkan seluruh pelajar mengikuti ekstrakurikuler kesenian tradisional setiap akhir pekan tanpa terkecuali.',
+                    'Mendorong kolaborasi kreator lokal untuk mengemas nilai budaya nusantara dalam format digital kreatif yang relevan dengan generasi muda.',
+                    'Mengadakan seminar akademik tahunan mengenai sejarah masuknya kebudayaan asing ke Indonesia.',
+                    'Membuat petisi penolakan terhadap festival budaya asing yang diselenggarakan di kota-kota besar.'
+                ],
+                correctIndex: 2,
+                explanation: 'Nasionalisme modern bukan bersikap tertutup (chauvinistik) dengan melarang budaya luar, melainkan adaptif dalam melestarikan serta mempromosikan budaya bangsa melalui medium kreatif yang diminati generasi muda sehingga jati diri bangsa tetap lestari.'
+            },
+            {
+                id: 'q2',
+                category: 'TWK',
+                subtopic: 'Integritas',
+                question: 'Andi adalah ketua panitia pengadaan barang di sebuah instansi pemerintah. Menjelang pengumuman pemenang tender, salah satu direktur perusahaan peserta tender mengirimkan parsel buah mewah dan voucer menginap di hotel berbintang ke rumah Andi dengan catatan "sekadar tanda silaturahmi". Sikap berintegritas yang seharusnya dilakukan Andi adalah...',
+                options: [
+                    'Menerima parsel buah karena mudah busuk, namun mengembalikan voucer hotel kepada pengirimnya.',
+                    'Menolak pemberian tersebut secara tegas dan melaporkan upaya pemberian gratifikasi tersebut kepada Unit Pengendalian Gratifikasi (UPG) atau KPK.',
+                    'Menerima pemberian tersebut lalu membagikannya kepada seluruh staf panitia agar tidak dianggap menikmati sendiri.',
+                    'Menyimpan pemberian tersebut hingga proses tender selesai agar tidak memengaruhi objektivitas penilaian.',
+                    'Mengabaikan kiriman tersebut dan tetap memenangkan perusahaan tersebut karena penawarannya memang paling murah.'
+                ],
+                correctIndex: 1,
+                explanation: 'Sesuai UU Tipikor dan aturan KPK, setiap pemberian yang berhubungan dengan jabatan dan berlawanan dengan kewajiban/tugas merupakan gratifikasi yang dilarang. Langkah paling tepat dan berintegritas adalah menolak secara tegas dan melaporkannya kepada UPG/KPK.'
+            },
+            {
+                id: 'q3',
+                category: 'TWK',
+                subtopic: 'Bela Negara',
+                question: 'Bela negara tidak selalu diwujudkan dengan memanggul senjata di medan perang. Dalam konteks menghadapi ancaman non-militer berupa serangan siber dan kebocoran data pelayanan publik, wujud kesadaran bela negara yang paling tepat dilakukan oleh aparatur sipil negara adalah...',
+                options: [
+                    'Mengikuti pelatihan dasar kemiliteran secara sukarela setiap libur nasional.',
+                    'Mematuhi protokol keamanan informasi instansi, menjaga kerahasiaan data negara, serta meningkatkan literasi keamanan digital.',
+                    'Menyerahkan sepenuhnya urusan keamanan data kepada divisi IT karena bukan merupakan tugas pokok bidang lain.',
+                    'Menyimpan seluruh dokumen rahasia negara di perangkat pribadi agar mudah diakses saat bekerja dari rumah.',
+                    'Membatasi penggunaan internet di kantor agar tidak ada celah masuknya serangan peretas.'
+                ],
+                correctIndex: 1,
+                explanation: 'Bela negara dilakukan sesuai dengan profesi dan kapasitas masing-masing. Di era ancaman siber, menjaga kerahasiaan data negara dan mematuhi protokol keamanan informasi adalah wujud nyata pengabdian dan kesadaran bela negara.'
+            },
+            {
+                id: 'q4',
+                category: 'TWK',
+                subtopic: 'Pilar Negara (Pancasila)',
+                question: 'Pemerintah desa mengadakan musyawarah untuk menentukan prioritas penggunaan dana desa tahun anggaran berjalan. Sebagian warga menginginkan pembangunan balai pertemuan, sementara kelompok petani menginginkan perbaikan saluran irigasi. Setelah berdiskusi panjang, disepakati perbaikan irigasi didahulukan karena berdampak langsung pada ketahanan pangan warga. Keputusan ini mencerminkan pengamalan Pancasila khususnya sila ke-...',
+                options: [
+                    'Sila Kedua, karena menjunjung tinggi nilai kemanusiaan dan tenggang rasa antarwarga.',
+                    'Sila Ketiga, karena mengutamakan persatuan desa di atas kepentingan kelompok tertentu.',
+                    'Sila Keempat, karena mengutamakan musyawarah mufakat dengan akal sehat dan hati nurani yang luhur.',
+                    'Sila Kelima, karena mewujudkan keadilan sosial bagi seluruh petani di desa tersebut.',
+                    'Sila Pertama, karena amanah dalam menjalankan tanggung jawab moral kepada Tuhan.'
+                ],
+                correctIndex: 2,
+                explanation: 'Proses pengambilan keputusan bersama melalui musyawarah untuk mencapai mufakat yang diliputi semangat kekeluargaan dan akal sehat merupakan inti pengamalan Sila Ke-4 Pancasila.'
+            },
+            {
+                id: 'q5',
+                category: 'TWK',
+                subtopic: 'Pilar Negara (UUD 1945)',
+                question: 'Dalam sistem ketatanegaraan Republik Indonesia pasca-amandemen UUD 1945, apabila terdapat suatu Undang-Undang yang dinilai bertentangan dengan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945, lembaga negara yang memiliki kewenangan konstitusional untuk menguji dan membatalkannya adalah...',
+                options: [
+                    'Mahkamah Agung (MA)',
+                    'Dewan Perwakilan Rakyat (DPR)',
+                    'Majelis Permusyawaratan Rakyat (MPR)',
+                    'Mahkamah Konstitusi (MK)',
+                    'Komisi Yudisial (KY)'
+                ],
+                correctIndex: 3,
+                explanation: 'Berdasarkan Pasal 24C ayat (1) UUD 1945, Mahkamah Konstitusi (MK) berwenang mengadili pada tingkat pertama dan terakhir yang putusannya bersifat final untuk menguji undang-undang terhadap Undang-Undang Dasar (judicial review).'
+            },
+            {
+                id: 'q6',
+                category: 'TWK',
+                subtopic: 'Bahasa Indonesia',
+                question: 'Cermati kalimat berikut:\n"Para hadirin sekalian dimohon untuk segera memasuki ruang rapat utama karena acara pelantikan pejabat fungsional akan segera dimulai."\n\nPerbaikan yang tepat agar kalimat tersebut menjadi kalimat efektif sesuai kaidah Bahasa Indonesia adalah...',
+                options: [
+                    'Menghilangkan kata "untuk" dan "segera" di tengah kalimat.',
+                    'Menghilangkan kata "Para" dan "sekalian" karena bermakna jamak ganda.',
+                    'Mengganti kata "dimohon" menjadi "diharapkan" agar lebih sopan.',
+                    'Menghilangkan kata "karena" dan menggantinya dengan tanda koma.',
+                    'Mengubah frasa "memasuki ruang" menjadi "masuk ke dalam ruang".'
+                ],
+                correctIndex: 1,
+                explanation: 'Salah satu syarat kalimat efektif adalah kehematan kata (menghindari pleonasme). Kata "hadirin" sudah bermakna jamak (orang-orang yang hadir), sehingga penggunaan kata "Para" dan "sekalian" secara bersamaan menjadi tidak efektif.'
+            },
+            {
+                id: 'q7',
+                category: 'TWK',
+                subtopic: 'Bhinneka Tunggal Ika',
+                question: 'Semboyan Bhinneka Tunggal Ika yang dikutip dari Kitab Sutasoma karangan Mpu Tantular memiliki makna filosofis yang mendalam bagi bangsa Indonesia. Prinsip utama yang terkandung dalam semboyan tersebut dalam mengelola kemajemukan adalah...',
+                options: [
+                    'Asimilasi total seluruh kebudayaan daerah menjadi satu kebudayaan nasional tunggal.',
+                    'Konvergensi perbedaan dalam kesatuan tanpa menghilangkan identitas asli masing-masing unsur budaya.',
+                    'Dominasi budaya mayoritas sebagai standar acuan dalam kehidupan bermasyarakat.',
+                    'Pemisahan wilayah pemukiman berdasarkan latar belakang suku dan adat istiadat agar tidak terjadi gesekan.',
+                    'Penyeragaman tata cara adat istiadat di seluruh provinsi demi efisiensi administrasi negara.'
+                ],
+                correctIndex: 1,
+                explanation: 'Bhinneka Tunggal Ika bersifat konvergen (mempertemukan perbedaan dalam satu wadah NKRI) tanpa menghilangkan jati diri/identitas masing-masing suku, agama, dan budaya.'
+            },
+
+            // --- TIU (7 Soal: No 8 - 14) ---
+            {
+                id: 'q8',
+                category: 'TIU',
+                subtopic: 'Verbal - Analogi',
+                question: 'KOMPONIS : SIMFONI = ... : ...',
+                options: [
+                    'Aktor : Skenario',
+                    'Penyair : Soneta',
+                    'Konduktor : Orkestra',
+                    'Penerbit : Novel',
+                    'Koreografer : Panggung'
+                ],
+                correctIndex: 1,
+                explanation: 'Hubungan kata: Seorang KOMPONIS menciptakan karya seni berupa SIMFONI. Hubungan yang sepadan adalah seorang PENYAIR menciptakan karya sastra berupa SONETA.'
+            },
+            {
+                id: 'q9',
+                category: 'TIU',
+                subtopic: 'Verbal - Silogisme',
+                question: 'Semua peserta seleksi CPNS yang lolos tahap SKD berhak mengikuti tahap SKB.\nSebagian peserta yang mengikuti tahap SKB mendapatkan nilai wawancara tertinggi.\nKesimpulan yang paling tepat berdasarkan kedua premis di atas adalah...',
+                options: [
+                    'Semua peserta yang lolos tahap SKD mendapatkan nilai wawancara tertinggi.',
+                    'Sebagian peserta seleksi CPNS yang lolos tahap SKD mendapatkan nilai wawancara tertinggi.',
+                    'Semua peserta yang mendapatkan nilai wawancara tertinggi pasti tidak lolos SKD.',
+                    'Sebagian peserta yang tidak lolos SKD berhak mengikuti tahap SKB.',
+                    'Tidak ada peserta SKD yang mendapatkan nilai wawancara tertinggi.'
+                ],
+                correctIndex: 1,
+                explanation: 'Premis 1: Semua A adalah B (Lolos SKD -> Ikut SKB). Premis 2: Sebagian B adalah C (Ikut SKB -> Nilai wawancara tertinggi). Maka kesimpulan yang sah adalah: Sebagian A adalah C (Sebagian peserta yang lolos SKD mendapatkan nilai wawancara tertinggi).'
+            },
+            {
+                id: 'q10',
+                category: 'TIU',
+                subtopic: 'Verbal - Analitis',
+                question: 'Lima orang pegawai (Rina, Budi, Citra, Doni, dan Eko) sedang antre di loket pelayanan. Diketahui:\n- Budi berada tepat di depan Citra.\n- Rina berada di urutan paling depan.\n- Doni berada di belakang Citra, tetapi bukan di urutan paling belakang.\nSiapakah yang berada di urutan keempat?',
+                options: [
+                    'Budi',
+                    'Citra',
+                    'Doni',
+                    'Eko',
+                    'Rina'
+                ],
+                correctIndex: 2,
+                explanation: 'Mari susun urutan 1 sampai 5:\n1. Rina paling depan -> Urutan 1: Rina.\n2. Budi tepat di depan Citra -> (Budi, Citra).\n3. Doni di belakang Citra, tapi bukan paling belakang -> Artinya Eko yang paling belakang (Urutan 5: Eko), dan Doni di urutan 4.\nSusunan lengkap: 1. Rina, 2. Budi, 3. Citra, 4. Doni, 5. Eko. Jadi urutan keempat adalah Doni.'
+            },
+            {
+                id: 'q11',
+                category: 'TIU',
+                subtopic: 'Numerik - Deret Angka',
+                question: 'Tentukan angka yang tepat untuk melengkapi deret berikut:\n4, 7, 13, 25, 49, ...',
+                options: [
+                    '73',
+                    '85',
+                    '97',
+                    '98',
+                    '101'
+                ],
+                correctIndex: 2,
+                explanation: 'Perhatikan pola selisih antar suku:\n4 ke 7 (+3)\n7 ke 13 (+6)\n13 ke 25 (+12)\n25 ke 49 (+24)\nTerlihat penambahannya selalu dikali 2 (+3, +6, +12, +24). Maka penambahan berikutnya adalah +48.\n49 + 48 = 97. (Atau rumus: 2n - 1 -> 2(49) - 1 = 97).'
+            },
+            {
+                id: 'q12',
+                category: 'TIU',
+                subtopic: 'Numerik - Perbandingan',
+                question: 'Sebuah proyek pembangunan jembatan direncanakan selesai dalam waktu 40 hari jika dikerjakan oleh 15 orang pekerja. Setelah bekerja selama 10 hari, proyek terhenti selama 5 hari karena cuaca ekstrem. Agar proyek tetap selesai tepat waktu sesuai rencana awal, berapa banyak pekerja tambahan yang dibutuhkan?',
+                options: [
+                    '3 orang',
+                    '4 orang',
+                    '5 orang',
+                    '6 orang',
+                    '18 orang'
+                ],
+                correctIndex: 0,
+                explanation: 'Perbandingan berbalik nilai:\nTotal beban kerja awal = 40 hari × 15 pekerja = 600 hari-orang.\nSudah dikerjakan 10 hari × 15 pekerja = 150 hari-orang.\nSisa beban kerja = 600 - 150 = 450 hari-orang.\nSisa waktu = 40 - 10 - 5 = 25 hari.\nJumlah pekerja yang dibutuhkan = 450 / 25 = 18 pekerja.\nJadi, tambahan pekerja = 18 - 15 = 3 orang.'
+            },
+            {
+                id: 'q13',
+                category: 'TIU',
+                subtopic: 'Numerik - Berhitung Cepat',
+                question: 'Hasil dari (37,5% × 64) + (0,25 × 48) - 12 adalah...',
+                options: [
+                    '18',
+                    '24',
+                    '26',
+                    '30',
+                    '36'
+                ],
+                correctIndex: 1,
+                explanation: 'Gunakan konversi pecahan istimewa agar cepat:\n37,5% = 3/8 -> (3/8) × 64 = 3 × 8 = 24.\n0,25 = 1/4 -> (1/4) × 48 = 12.\nMaka: 24 + 12 - 12 = 24.'
+            },
+            {
+                id: 'q14',
+                category: 'TIU',
+                subtopic: 'Logika Kuantitatif',
+                question: 'Diketahui x adalah harga 1 kg apel setelah mendapat diskon 20%, sedangkan y adalah harga 1 kg jeruk setelah mendapat diskon 25%. Jika harga awal 1 kg apel adalah Rp50.000 dan harga awal 1 kg jeruk adalah Rp52.000, manakah hubungan yang tepat antara x dan y?',
+                options: [
+                    'x > y',
+                    'x < y',
+                    'x = y',
+                    '2x = y',
+                    'Hubungan x dan y tidak dapat ditentukan'
+                ],
+                correctIndex: 0,
+                explanation: 'Hitung nilai x:\nx = 80% × Rp50.000 = Rp40.000.\nHitung nilai y:\ny = 75% × Rp52.000 = (3/4) × Rp52.000 = Rp39.000.\nKarena Rp40.000 > Rp39.000, maka x > y.'
+            },
+
+            // --- TKP (7 Soal: No 15 - 21, Skala Poin 1-5) ---
+            {
+                id: 'q15',
+                category: 'TKP',
+                subtopic: 'Pelayanan Publik',
+                question: 'Anda bertugas di bagian loket pelayanan terpadu. Seorang warga lanjut usia datang dengan wajah bingung karena tidak membawa salah satu dokumen persyaratan fotokopi KTP dan tidak memahami cara mengunduhnya dari aplikasi Identitas Kependudukan Digital (IKD). Antrean di belakangnya mulai panjang. Tindakan apa yang paling tepat Anda lakukan?',
+                options: [
+                    'Memintanya pulang terlebih dahulu untuk melengkapi berkas agar tidak menghambat antrean warga lain.',
+                    'Menjelaskan persyaratan dengan suara keras agar ia cepat paham dan segera bergeser dari loket.',
+                    'Memberikan senyum ramah, mengarahkannya ke meja layanan khusus prioritas/bantuan petugas pendamping untuk dibantu mencetakkan dokumennya, lalu melanjutkan antrean.',
+                    'Mengambil ponselnya dan mengoperasikannya sendiri di loket meskipun antrean di belakang menunggu lama.',
+                    'Menyuruhnya meminta bantuan warga lain yang sedang mengantre di belakangnya.'
+                ],
+                optionScores: [2, 1, 5, 4, 3],
+                explanation: 'Poin 5 (Opsi C): Menunjukkan empati tinggi kepada kelompok rentan (lansia) sekaligus solutif menjaga kelancaran pelayanan publik bagi antrean lainnya melalui mekanisme layanan bantuan/prioritas.'
+            },
+            {
+                id: 'q16',
+                category: 'TKP',
+                subtopic: 'Jejaring Kerja',
+                question: 'Tim Anda mendapatkan proyek lintas divisi yang membutuhkan data penting dari divisi lain. Namun, kepala divisi tersebut dikenal sulit diajak berkomunikasi dan sering menunda permintaan data. Sebagai koordinator tim, langkah yang Anda ambil adalah...',
+                options: [
+                    'Melaporkan langsung sikap kepala divisi tersebut kepada pimpinan tertinggi agar segera diberi teguran.',
+                    'Mengerjakan proyek dengan data seadanya tanpa melibatkan divisi tersebut agar deadline tercapai.',
+                    'Menghubungi dan menemui kepala divisi tersebut secara personal dengan sopan, menjelaskan urgensi proyek bagi instansi, serta menawarkan bantuan teknis untuk mempermudah penarikan data.',
+                    'Mengirimkan email pengingat setiap jam hingga pihak divisi tersebut merasa terdesak dan mengirimkan datanya.',
+                    'Menunggu hingga pihak divisi tersebut sadar akan tanggung jawabnya sendiri.'
+                ],
+                optionScores: [2, 1, 5, 3, 1],
+                explanation: 'Poin 5 (Opsi C): Mengedepankan komunikasi persuasif, membangun relasi baik lintas unit, menyamakan visi kepentingan organisasi, dan proaktif membantu hambatan rekan kerja.'
+            },
+            {
+                id: 'q17',
+                category: 'TKP',
+                subtopic: 'Sosial Budaya',
+                question: 'Anda baru saja dinyatakan lulus CPNS dan ditempatkan di daerah terpencil yang memiliki adat istiadat serta bahasa daerah yang sangat berbeda dengan daerah asal Anda. Pada minggu pertama bekerja, warga sekitar mengundang Anda dalam acara syukuran adat desa yang menyajikan makanan tradisional yang belum pernah Anda coba. Sikap Anda adalah...',
+                options: [
+                    'Menolak undangan dengan alasan masih lelah membereskan barang-barang di tempat tinggal baru.',
+                    'Hadir sebentar lalu pulang lebih awal karena merasa canggung tidak mengerti bahasa daerah mereka.',
+                    'Menghadiri undangan dengan antusias, berbaur dengan warga, menghormati prosesi adat, serta mencicipi hidangan yang disajikan sebagai bentuk penghargaan.',
+                    'Hadir namun membawa bekal makanan sendiri dari rumah karena khawatir tidak cocok dengan cita rasa lokal.',
+                    'Mengirimkan bingkisan sebagai pengganti kehadiran agar tetap dianggap menghormati warga.'
+                ],
+                optionScores: [1, 2, 5, 3, 4],
+                explanation: 'Poin 5 (Opsi C): Menunjukkan kemampuan adaptasi sosial budaya yang tinggi, keterbukaan terhadap keberagaman, dan upaya membangun keakraban dengan masyarakat setempat.'
+            },
+            {
+                id: 'q18',
+                category: 'TKP',
+                subtopic: 'Teknologi Informasi (TIK)',
+                question: 'Instansi Anda baru saja meluncurkan sistem persuratan elektronik (e-Office) berbasis cloud untuk menggantikan surat kertas. Beberapa rekan kerja senior di ruangan Anda mengeluh kesulitan menggunakannya dan berniat tetap memakai cara manual. Sebagai pegawai yang lebih memahami teknologi, sikap Anda adalah...',
+                options: [
+                    'Membiarkan mereka memakai cara manual karena menghormati senioritas mereka di kantor.',
+                    'Mengambil alih seluruh pekerjaan penginputan surat milik rekan senior tersebut setiap hari.',
+                    'Menginisiasi sesi berbagi singkat di sela waktu luang, membuatkan panduan langkah demi langkah yang mudah dipahami, dan mendampingi mereka hingga terbiasa.',
+                    'Menegur mereka bahwa cara manual sudah dilarang dan dapat memengaruhi penilaian kinerja tahunan.',
+                    'Fokus menyelesaikan pekerjaan sendiri menggunakan sistem baru agar terlihat paling unggul di mata atasan.'
+                ],
+                optionScores: [1, 3, 5, 2, 4],
+                explanation: 'Poin 5 (Opsi C): Menunjukkan penguasaan TIK yang dibarengi dengan semangat kolaborasi dan pemberdayaan rekan kerja agar transformasi digital instansi berjalan sukses.'
+            },
+            {
+                id: 'q19',
+                category: 'TKP',
+                subtopic: 'Profesionalisme',
+                question: 'Pada hari Jumat sore pukul 15.45 WIB, menjelang jam pulang kantor, atasan Anda memberikan tugas mendadak untuk merekapitulasi laporan anggaran yang harus dipresentasikan pada rapat pimpinan Senin pagi. Padahal, Anda sudah berjanji menemani keluarga berbelanja kebutuhan bulanan sore itu. Tindakan Anda adalah...',
+                options: [
+                    'Menolak tugas tersebut dengan sopan karena diberikan di luar jam kerja efektif.',
+                    'Menerima tugas tersebut namun baru mengerjakannya pada hari Senin pagi sebelum rapat dimulai.',
+                    'Menerima tugas dengan penuh tanggung jawab, segera menghubungi keluarga untuk menjadwalkan ulang acara belanja, dan menyelesaikan laporan tersebut dengan teliti.',
+                    'Menerima tugas tersebut sambil mengeluh kepada rekan kerja bahwa atasan tidak menghargai waktu pribadi pegawai.',
+                    'Meminta rekan kerja lain yang belum berkeluarga untuk menggantikan Anda mengerjakan laporan tersebut.'
+                ],
+                optionScores: [1, 2, 5, 3, 2],
+                explanation: 'Poin 5 (Opsi C): Mencerminkan profesionalisme, komitmen tinggi terhadap tanggung jawab jabatan, dan kemampuan mengelola prioritas dengan komunikasi yang baik kepada keluarga.'
+            },
+            {
+                id: 'q20',
+                category: 'TKP',
+                subtopic: 'Anti Radikalisme',
+                question: 'Dalam grup percakapan alumni sekolah di media sosial, salah satu anggota membagikan artikel provokatif yang mengajak untuk menolak sistem demokrasi dan mengganti ideologi negara karena dianggap tidak sesuai dengan keyakinan tertentu. Beberapa anggota mulai terpengaruh. Sikap Anda sebagai ASN adalah...',
+                options: [
+                    'Langsung keluar dari grup tersebut agar tidak terlibat masalah hukum di kemudian hari.',
+                    'Membalas dengan komentar emosional dan memaki pengirim artikel tersebut di dalam grup.',
+                    'Menyajikan pandangan penyeimbang secara objektif dan santun mengenai konsensus kebangsaan serta Pancasila sebagai pemersatu, serta mengingatkan bahaya penyebaran paham ekstremisme.',
+                    'Diam saja dan tidak ikut berkomentar karena menganggap itu adalah kebebasan berpendapat di ruang privat.',
+                    'Menyimpan tangkapan layar percakapan tersebut lalu menyebarkannya ke grup lain sebagai bahan perbincangan.'
+                ],
+                optionScores: [3, 2, 5, 1, 2],
+                explanation: 'Poin 5 (Opsi C): ASN berperan sebagai perekat dan pemersatu bangsa. Sikap terbaik adalah aktif meluruskan narasi ekstremisme secara edukatif, santun, dan berlandaskan nilai Pancasila.'
+            },
+            {
+                id: 'q21',
+                category: 'TKP',
+                subtopic: 'Profesionalisme & Integritas',
+                question: 'Saat memeriksa kembali laporan kegiatan yang sudah Anda serahkan kepada atasan kemarin, Anda baru menyadari terdapat kesalahan input angka pada salah satu tabel yang memengaruhi total realisasi anggaran sebesar 2%. Atasan Anda belum menyadari kesalahan tersebut. Apa yang akan Anda lakukan?',
+                options: [
+                    'Membiarkannya saja karena selisih 2% dianggap wajar dan tidak akan terlalu diperhatikan saat evaluasi.',
+                    'Segera menghadap atasan, mengakui kekeliruan secara jujur, meminta maaf, dan menyerahkan draf revisi yang sudah diperbaiki.',
+                    'Diam-diam mengganti file di komputer atasan saat beliau sedang keluar ruangan tanpa memberitahunya.',
+                    'Menunggu hingga atasan menanyakan hal tersebut baru kemudian menjelaskan alasan kesalahannya.',
+                    'Menyalahkan staf administrasi yang memberikan data mentah kepada Anda sebelumnya.'
+                ],
+                optionScores: [1, 5, 2, 3, 1],
+                explanation: 'Poin 5 (Opsi B): Menunjukkan integritas (kejujuran mengakui kesalahan) sekaligus profesionalisme (inisiatif langsung menyiapkan solusi perbaikan tanpa menunggu ditegur).'
+            }
+        ];
+
+        // ==================== 3. STATE MANAGEMENT & LOCALSTORAGE ====================
+        const STORAGE_KEY = 'siapasn_cpns_state_v1';
+
+        let appState = {
+            streak: {
+                count: 0,
+                lastActiveDate: null, // YYYY-MM-DD
+                historyDates: [] // array of YYYY-MM-DD
+            },
+            completedMateri: [], // array of materi IDs
+            quizHistory: [], // array of attempt records
+            stats: {
+                totalQuestionsAnswered: 0,
+                twkTiuCorrect: 0,
+                twkTiuTotal: 0
+            }
+        };
+
+        // Active Quiz Session State
+        let activeQuiz = {
+            mode: 'tryout', // 'tryout' or 'santuy'
+            category: 'ALL',
+            questions: [],
+            currentIndex: 0,
+            userAnswers: {}, // { questionIndex: optionIndex }
+            raguFlags: {}, // { questionIndex: boolean }
+            timerInterval: null,
+            secondsRemaining: 0
+        };
+
+        // Helper: Get Today's Date String in Local Time (YYYY-MM-DD)
+        function getTodayStr() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getYesterdayStr() {
+            const d = new Date();
+            d.setDate(d.getDate() - 1);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Load & Validate State from localStorage
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    appState = {
+                        ...appState,
+                        ...parsed,
+                        streak: { ...appState.streak, ...(parsed.streak || {}) },
+                        stats: { ...appState.stats, ...(parsed.stats || {}) }
+                    };
+                }
+                // Validate streak continuity
+                const today = getTodayStr();
+                const yesterday = getYesterdayStr();
+                if (appState.streak.lastActiveDate &&
+                    appState.streak.lastActiveDate !== today &&
+                    appState.streak.lastActiveDate !== yesterday) {
+                    // Streak broken because user missed yesterday
+                    appState.streak.count = 0;
+                    saveState();
+                }
+            } catch (e) {
+                console.error('Gagal memuat state:', e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.error('Gagal menyimpan state:', e);
+            }
+        }
+
+        // Record Daily Activity to Maintain/Increment Streak
+        function recordDailyActivity(activityLabel) {
+            const today = getTodayStr();
+            const yesterday = getYesterdayStr();
+
+            if (!appState.streak.historyDates.includes(today)) {
+                appState.streak.historyDates.push(today);
+            }
+
+            if (appState.streak.lastActiveDate !== today) {
+                if (appState.streak.lastActiveDate === yesterday) {
+                    appState.streak.count += 1;
+                } else {
+                    appState.streak.count = 1;
+                }
+                appState.streak.lastActiveDate = today;
+                showToast(`🔥 Daily Streak menyala! ${appState.streak.count} hari berturut-turut!`, 'amber');
+            }
+
+            saveState();
+            updateDashboardUI();
+        }
+
+        // ==================== 4. UI NAVIGATION & NOTIFICATIONS ====================
+        function navigateTo(viewName) {
+            // Stop quiz timer if leaving quiz view unexpectedly
+            if (viewName !== 'quiz' && activeQuiz.timerInterval) {
+                clearInterval(activeQuiz.timerInterval);
+                activeQuiz.timerInterval = null;
+            }
+
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) target.classList.remove('hidden');
+
+            // Update Desktop Nav Active State
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-navy-800', 'text-amber-400');
+                btn.classList.add('text-navy-100');
+            });
+            const activeNav = document.getElementById(`nav-${viewName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-navy-800', 'text-amber-400');
+                activeNav.classList.remove('text-navy-100');
+            }
+
+            // Update Mobile Nav Active State
+            document.querySelectorAll('.mnav-btn').forEach(btn => {
+                btn.classList.remove('text-amber-400');
+                btn.classList.add('text-navy-200');
+            });
+            const activeMNav = document.getElementById(`mnav-${viewName}`);
+            if (activeMNav) {
+                activeMNav.classList.add('text-amber-400');
+                activeMNav.classList.remove('text-navy-200');
+            }
+
+            // Refresh view-specific data
+            if (viewName === 'dashboard') updateDashboardUI();
+            if (viewName === 'materi') renderMateri('ALL');
+            if (viewName === 'riwayat') renderHistoryView();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                info: 'bg-navy-900 text-white border-navy-700',
+                success: 'bg-emerald-700 text-white border-emerald-600',
+                amber: 'bg-amber-500 text-navy-950 border-amber-400 font-bold'
+            };
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg border text-xs sm:text-sm flex items-center space-x-2 transform transition-all duration-300 translate-y-2 opacity-0 ${colors[type] || colors.info}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Custom Modal Handler
+        let modalCallback = null;
+        function openModal(title, message, confirmText, onConfirm, isDanger = false) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            confirmBtn.textContent = confirmText;
+
+            const iconBg = document.getElementById('modal-icon-bg');
+            const icon = document.getElementById('modal-icon');
+            if (isDanger) {
+                confirmBtn.className = 'px-5 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition shadow-sm';
+                iconBg.className = 'w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg';
+                icon.className = 'fa-solid fa-circle-exclamation';
+            } else {
+                confirmBtn.className = 'px-5 py-2 rounded-xl text-sm font-semibold text-white bg-navy-800 hover:bg-navy-900 transition shadow-sm';
+                iconBg.className = 'w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg';
+                icon.className = 'fa-solid fa-circle-question';
+            }
+
+            modalCallback = onConfirm;
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modalCallback = null;
+        }
+
+        document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+            if (modalCallback) modalCallback();
+            closeModal();
+        });
+
+        // ==================== 5. DASHBOARD RENDERING ====================
+        function updateDashboardUI() {
+            const today = getTodayStr();
+            const isActiveToday = appState.streak.lastActiveDate === today;
+
+            // Header & Dashboard Streak
+            document.getElementById('header-streak-count').textContent = `${appState.streak.count} Hari`;
+            document.getElementById('dash-streak-number').textContent = appState.streak.count;
+
+            const headerFire = document.getElementById('header-fire-icon');
+            const dashFire = document.getElementById('dash-fire-icon');
+            const statusText = document.getElementById('dash-streak-status');
+
+            if (isActiveToday && appState.streak.count > 0) {
+                headerFire.className = 'fa-solid fa-fire text-amber-400 text-base fire-pulse';
+                dashFire.className = 'fa-solid fa-fire text-2xl text-amber-400 fire-pulse';
+                statusText.textContent = 'Hebat! Target belajar harianmu hari ini sudah menyala.';
+                statusText.className = 'text-xs text-emerald-300 font-medium mb-3';
+            } else {
+                headerFire.className = 'fa-solid fa-fire text-slate-400 text-base';
+                dashFire.className = 'fa-solid fa-fire text-2xl text-slate-400';
+                statusText.textContent = 'Selesaikan 1 materi atau latihan soal hari ini untuk menyalakan api streak!';
+                statusText.className = 'text-xs text-amber-200/90 mb-3';
+            }
+
+            // Weekly Calendar (Last 7 days)
+            const calContainer = document.getElementById('weekly-streak-calendar');
+            calContainer.innerHTML = '';
+            const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                const dayLabel = dayNames[d.getDay()];
+                const active = appState.streak.historyDates.includes(dStr);
+                const isToday = dStr === today;
+
+                const cell = document.createElement('div');
+                cell.className = `flex flex-col items-center p-1.5 rounded-lg ${isToday ? 'bg-navy-800 ring-1 ring-amber-400/60' : 'bg-navy-900/50'}`;
+                cell.innerHTML = `
+                    <span class="text-[10px] text-navy-300 mb-1">${dayLabel}</span>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs ${active ? 'bg-amber-500 text-navy-950 font-bold' : 'bg-navy-800 text-navy-500'}">
+                        ${active ? '<i class="fa-solid fa-fire text-[11px]"></i>' : d.getDate()}
+                    </div>
+                `;
+                calContainer.appendChild(cell);
+            }
+
+            // Metrics
+            document.getElementById('stat-total-questions').textContent = appState.stats.totalQuestionsAnswered;
+            document.getElementById('stat-materi-done').textContent = appState.completedMateri.length;
+            document.getElementById('stat-materi-total').textContent = `/${MATERI_DATA.length}`;
+
+            // Highest Score
+            let maxScore = 0;
+            appState.quizHistory.forEach(item => {
+                if (item.convertedTotal > maxScore) maxScore = item.convertedTotal;
+            });
+            document.getElementById('stat-highest-score').textContent = maxScore;
+
+            // Accuracy TWK & TIU
+            const acc = appState.stats.twkTiuTotal > 0
+                ? Math.round((appState.stats.twkTiuCorrect / appState.stats.twkTiuTotal) * 100)
+                : 0;
+            document.getElementById('stat-accuracy').textContent = `${acc}%`;
+        }
+
+        // ==================== 6. MATERI PEMBELAJARAN ====================
+        let currentMateriFilter = 'ALL';
+
+        function filterMateri(cat) {
+            currentMateriFilter = cat;
+            document.querySelectorAll('.materi-tab').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-navy-900', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+            const activeTab = document.getElementById(`tab-materi-${cat}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-white', 'text-navy-900', 'shadow-sm');
+                activeTab.classList.remove('text-slate-600');
+            }
+            renderMateri(cat);
+        }
+
+        function renderMateri(cat) {
+            const grid = document.getElementById('materi-grid');
+            grid.innerHTML = '';
+
+            const filtered = cat === 'ALL' ? MATERI_DATA : MATERI_DATA.filter(m => m.category === cat);
+
+            filtered.forEach(item => {
+                const isDone = appState.completedMateri.includes(item.id);
+                const badgeColor = item.category === 'TWK'
+                    ? 'bg-red-100 text-red-700'
+                    : item.category === 'TIU'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-emerald-100 text-emerald-700';
+
+                const tipsHtml = item.tips.map(t => `<li class="flex items-start space-x-2"><i class="fa-solid fa-check text-amber-500 mt-1 text-xs"></i><span>${t}</span></li>`).join('');
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl p-6 border transition flex flex-col justify-between shadow-sm ${isDone ? 'border-emerald-300 bg-emerald-50/10' : 'border-slate-200/80'}`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2.5 py-1 rounded-md text-xs font-extrabold ${badgeColor}">${item.category}</span>
+                                <span class="text-xs font-semibold text-slate-500">${item.subtopic}</span>
+                            </div>
+                            ${isDone ? '<span class="text-xs font-bold text-emerald-700 flex items-center"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</span>' : ''}
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">${item.title}</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">${item.summary}</p>
+                        
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-5">
+                            <p class="text-xs font-bold text-navy-900 uppercase tracking-wider mb-2"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Trik & Fokus Soal 2024:</p>
+                            <ul class="space-y-1.5 text-xs text-slate-700 leading-relaxed">
+                                ${tipsHtml}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 gap-2">
+                        <button onclick="toggleMateriDone('${item.id}')" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center ${isDone ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-navy-800 hover:bg-navy-900 text-white'}">
+                            <i class="fa-solid ${isDone ? 'fa-check-double' : 'fa-bookmark'} mr-1.5"></i>
+                            ${isDone ? 'Sudah Dipelajari' : 'Tandai Sudah Dipelajari'}
+                        </button>
+                        <button onclick="startQuizMode('santuy', '${item.category}')" class="py-2.5 px-3.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Latihan Soal ${item.category}">
+                            Latihan <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleMateriDone(materiId) {
+            const idx = appState.completedMateri.indexOf(materiId);
+            if (idx === -1) {
+                appState.completedMateri.push(materiId);
+                recordDailyActivity('Membaca Materi SKD');
+                showToast('✅ Materi ditandai selesai! Progres tersimpan.', 'success');
+            } else {
+                appState.completedMateri.splice(idx, 1);
+                saveState();
+            }
+            renderMateri(currentMateriFilter);
+            updateDashboardUI();
+        }
+
+        // ==================== 7. QUIZ & TRYOUT CAT ENGINE ====================
+        function startQuizMode(mode, category) {
+            let selectedQuestions = [];
+            if (category === 'ALL') {
+                selectedQuestions = [...QUESTIONS_BANK];
+            } else {
+                selectedQuestions = QUESTIONS_BANK.filter(q => q.category === category);
+            }
+
+            // Reset Active Quiz
+            if (activeQuiz.timerInterval) clearInterval(activeQuiz.timerInterval);
+
+            activeQuiz = {
+                mode: mode,
+                category: category,
+                questions: selectedQuestions,
+                currentIndex: 0,
+                userAnswers: {},
+                raguFlags: {},
+                timerInterval: null,
+                secondsRemaining: mode === 'tryout' ? selectedQuestions.length * 70 : 0 // ~70 detik/soal proporsional CAT
+            };
+
+            // Setup UI Header
+            const modeBadge = document.getElementById('quiz-mode-badge');
+            const timerBox = document.getElementById('quiz-timer-box');
+
+            if (mode === 'tryout') {
+                modeBadge.textContent = 'SIMULASI TRYOUT CAT';
+                modeBadge.className = 'px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500 text-navy-950 uppercase tracking-wider';
+                timerBox.classList.remove('hidden');
+                startQuizTimer();
+            } else {
+                modeBadge.textContent = 'LATIHAN SANTAI';
+                modeBadge.className = 'px-3 py-1 rounded-lg text-xs font-extrabold bg-blue-600 text-white uppercase tracking-wider';
+                timerBox.classList.add('hidden');
+            }
+
+            document.getElementById('q-total-num').textContent = selectedQuestions.length;
+
+            navigateTo('quiz');
+            renderQuizQuestion();
+            renderQuizNavGrid();
+        }
+
+        function startQuizTimer() {
+            updateTimerDisplay();
+            activeQuiz.timerInterval = setInterval(() => {
+                activeQuiz.secondsRemaining--;
+                updateTimerDisplay();
+                if (activeQuiz.secondsRemaining <= 0) {
+                    clearInterval(activeQuiz.timerInterval);
+                    showToast('⏰ Waktu habis! Jawaban Anda otomatis dikumpulkan.', 'amber');
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(activeQuiz.secondsRemaining / 60);
+            const secs = activeQuiz.secondsRemaining % 60;
+            const display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const timerEl = document.getElementById('quiz-timer');
+            timerEl.textContent = display;
+
+            const box = document.getElementById('quiz-timer-box');
+            if (activeQuiz.secondsRemaining <= 60) {
+                box.classList.add('animate-pulse', 'bg-red-600', 'text-white');
+                box.classList.remove('bg-red-50', 'text-red-700');
+            } else {
+                box.classList.remove('animate-pulse', 'bg-red-600', 'text-white');
+                box.classList.add('bg-red-50', 'text-red-700');
+            }
+        }
+
+        function renderQuizQuestion() {
+            const idx = activeQuiz.currentIndex;
+            const q = activeQuiz.questions[idx];
+            const userAns = activeQuiz.userAnswers[idx];
+            const isSantuyAnswered = activeQuiz.mode === 'santuy' && userAns !== undefined;
+
+            document.getElementById('q-current-num').textContent = idx + 1;
+            document.getElementById('quiz-category-badge').textContent = `Subtes: ${q.category}`;
+            document.getElementById('q-subtopic-label').textContent = q.subtopic;
+            document.getElementById('q-text').textContent = q.question;
+
+            // Update Ragu Button State
+            const raguBtn = document.getElementById('btn-ragu');
+            if (activeQuiz.raguFlags[idx]) {
+                raguBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-navy-950 border border-amber-500 transition';
+            } else {
+                raguBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300 transition';
+            }
+
+            // Prev/Next Button State
+            document.getElementById('btn-prev-q').disabled = idx === 0;
+            const nextBtn = document.getElementById('btn-next-q');
+            if (idx === activeQuiz.questions.length - 1) {
+                nextBtn.innerHTML = 'Selesai <i class="fa-solid fa-check ml-1.5"></i>';
+                nextBtn.onclick = confirmFinishQuiz;
+            } else {
+                nextBtn.innerHTML = 'Selanjutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>';
+                nextBtn.onclick = nextQuestion;
+            }
+
+            // Render Options
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+
+            q.options.forEach((optText, optIdx) => {
+                const isSelected = userAns === optIdx;
+                let btnStyle = 'border-slate-200 hover:border-navy-400 hover:bg-slate-50 text-slate-700';
+                let circleStyle = 'bg-slate-100 text-slate-700';
+                let extraBadge = '';
+
+                if (isSantuyAnswered) {
+                    // Show feedback immediately in Santuy mode
+                    if (q.category === 'TKP') {
+                        const score = q.optionScores[optIdx];
+                        if (score === 5) {
+                            btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-medium';
+                            circleStyle = 'bg-emerald-600 text-white';
+                        } else if (isSelected) {
+                            btnStyle = 'border-amber-500 bg-amber-50 text-amber-950 font-medium';
+                            circleStyle = 'bg-amber-500 text-white';
+                        }
+                        extraBadge = `<span class="ml-auto px-2 py-0.5 rounded text-xs font-bold ${score === 5 ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-200 text-slate-700'}">Poin ${score}</span>`;
+                    } else {
+                        if (optIdx === q.correctIndex) {
+                            btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-medium';
+                            circleStyle = 'bg-emerald-600 text-white';
+                            extraBadge = `<span class="ml-auto text-emerald-700 font-bold text-xs"><i class="fa-solid fa-check-circle"></i> Benar</span>`;
+                        } else if (isSelected) {
+                            btnStyle = 'border-red-400 bg-red-50 text-red-950';
+                            circleStyle = 'bg-red-600 text-white';
+                            extraBadge = `<span class="ml-auto text-red-700 font-bold text-xs"><i class="fa-solid fa-xmark-circle"></i> Pilihanmu</span>`;
+                        }
+                    }
+                } else if (isSelected) {
+                    btnStyle = 'border-navy-700 bg-navy-50/80 text-navy-950 font-semibold ring-1 ring-navy-700';
+                    circleStyle = 'bg-navy-800 text-white';
+                }
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(optIdx);
+                btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border transition flex items-start space-x-3.5 ${btnStyle}`;
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-extrabold ${circleStyle}">${letters[optIdx]}</span>
+                    <span class="text-xs sm:text-sm leading-relaxed flex-grow pt-0.5">${optText}</span>
+                    ${extraBadge}
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Instant Explanation in Santuy Mode
+            const expBox = document.getElementById('instant-explanation-box');
+            if (isSantuyAnswered) {
+                expBox.classList.remove('hidden');
+                const expHeader = document.getElementById('instant-exp-header');
+                if (q.category === 'TKP') {
+                    const earned = q.optionScores[userAns];
+                    expHeader.textContent = `Anda memperoleh ${earned} Poin (Maksimal 5 Poin) — Pembahasan:`;
+                } else {
+                    const isRight = userAns === q.correctIndex;
+                    expHeader.textContent = isRight
+                        ? `Jawaban Anda Benar! (+5 Poin) — Pembahasan:`
+                        : `Jawaban Kurang Tepat (Kunci: ${letters[q.correctIndex]}) — Pembahasan:`;
+                }
+                document.getElementById('instant-exp-text').textContent = q.explanation;
+            } else {
+                expBox.classList.add('hidden');
+            }
+        }
+
+        function selectOption(optIdx) {
+            const idx = activeQuiz.currentIndex;
+            activeQuiz.userAnswers[idx] = optIdx;
+            renderQuizQuestion();
+            renderQuizNavGrid();
+        }
+
+        function toggleRagu() {
+            const idx = activeQuiz.currentIndex;
+            activeQuiz.raguFlags[idx] = !activeQuiz.raguFlags[idx];
+            renderQuizQuestion();
+            renderQuizNavGrid();
+        }
+
+        function prevQuestion() {
+            if (activeQuiz.currentIndex > 0) {
+                activeQuiz.currentIndex--;
+                renderQuizQuestion();
+                renderQuizNavGrid();
+            }
+        }
+
+        function nextQuestion() {
+            if (activeQuiz.currentIndex < activeQuiz.questions.length - 1) {
+                activeQuiz.currentIndex++;
+                renderQuizQuestion();
+                renderQuizNavGrid();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            activeQuiz.currentIndex = idx;
+            renderQuizQuestion();
+            renderQuizNavGrid();
+        }
+
+        function renderQuizNavGrid() {
+            const grid = document.getElementById('quiz-nav-grid');
+            grid.innerHTML = '';
+
+            let answeredCount = 0;
+
+            activeQuiz.questions.forEach((_, idx) => {
+                const isAnswered = activeQuiz.userAnswers[idx] !== undefined;
+                const isRagu = !!activeQuiz.raguFlags[idx];
+                const isCurrent = activeQuiz.currentIndex === idx;
+
+                if (isAnswered) answeredCount++;
+
+                let colorClass = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
+                if (isRagu) {
+                    colorClass = 'bg-amber-400 text-navy-950 font-bold';
+                } else if (isAnswered) {
+                    colorClass = 'bg-emerald-500 text-white font-bold';
+                }
+
+                if (isCurrent) {
+                    colorClass += ' ring-2 ring-navy-900 ring-offset-1';
+                }
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.className = `h-9 rounded-lg text-xs font-semibold transition flex items-center justify-center ${colorClass}`;
+                btn.textContent = idx + 1;
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('answered-counter').textContent = `${answeredCount}/${activeQuiz.questions.length} Dijawab`;
+        }
+
+        function confirmFinishQuiz() {
+            const total = activeQuiz.questions.length;
+            const answered = Object.keys(activeQuiz.userAnswers).length;
+            const unanswered = total - answered;
+
+            const msg = unanswered > 0
+                ? `Masih ada ${unanswered} soal yang belum dijawab. Apakah Anda yakin ingin mengakhiri dan melihat hasil nilai?`
+                : 'Seluruh soal telah dijawab. Akhiri simulasi dan lihat analisis kelulusan Passing Grade sekarang?';
+
+            openModal('Selesaikan Ujian?', msg, 'Ya, Selesai & Nilai', () => {
+                finishQuiz();
+            });
+        }
+
+        function confirmQuitQuiz() {
+            openModal('Keluar dari Latihan?', 'Progres pengerjaan sesi ini tidak akan disimpan jika Anda keluar sekarang.', 'Keluar', () => {
+                if (activeQuiz.timerInterval) clearInterval(activeQuiz.timerInterval);
+                navigateTo('latihan');
+            }, true);
+        }
+
+        // ==================== 8. SCORING, PASSING GRADE & RESULT VIEW ====================
+        function finishQuiz() {
+            if (activeQuiz.timerInterval) {
+                clearInterval(activeQuiz.timerInterval);
+                activeQuiz.timerInterval = null;
+            }
+
+            // Calculate raw scores per subtest
+            let raw = {
+                TWK: { score: 0, max: 0, count: 0, correct: 0 },
+                TIU: { score: 0, max: 0, count: 0, correct: 0 },
+                TKP: { score: 0, max: 0, count: 0 }
+            };
+
+            let totalAnsweredThisSession = 0;
+
+            activeQuiz.questions.forEach((q, idx) => {
+                const ans = activeQuiz.userAnswers[idx];
+                if (ans !== undefined) totalAnsweredThisSession++;
+
+                if (q.category === 'TWK' || q.category === 'TIU') {
+                    raw[q.category].count++;
+                    raw[q.category].max += 5;
+                    if (ans !== undefined && ans === q.correctIndex) {
+                        raw[q.category].score += 5;
+                        raw[q.category].correct++;
+                    }
+                } else if (q.category === 'TKP') {
+                    raw.TKP.count++;
+                    raw.TKP.max += 5;
+                    if (ans !== undefined) {
+                        raw.TKP.score += q.optionScores[ans];
+                    }
+                }
+            });
+
+            // Convert proportionally to Official BKN SKD Scale (TWK max 150, TIU max 175, TKP max 225)
+            // So Passing Grades (TWK >= 65, TIU >= 80, TKP >= 166) work accurately!
+            const convTWK = raw.TWK.max > 0 ? Math.round((raw.TWK.score / raw.TWK.max) * 150) : null;
+            const convTIU = raw.TIU.max > 0 ? Math.round((raw.TIU.score / raw.TIU.max) * 175) : null;
+            const convTKP = raw.TKP.max > 0 ? Math.round((raw.TKP.score / raw.TKP.max) * 225) : null;
+
+            const convertedTotal = (convTWK || 0) + (convTIU || 0) + (convTKP || 0);
+
+            // Passing Grade Checks
+            const passTWK = convTWK !== null ? convTWK >= 65 : true;
+            const passTIU = convTIU !== null ? convTIU >= 80 : true;
+            const passTKP = convTKP !== null ? convTKP >= 166 : true;
+            const isAllPassed = passTWK && passTIU && passTKP;
+
+            // Update Global Stats
+            appState.stats.totalQuestionsAnswered += totalAnsweredThisSession;
+            appState.stats.twkTiuCorrect += (raw.TWK.correct + raw.TIU.correct);
+            appState.stats.twkTiuTotal += (raw.TWK.count + raw.TIU.count);
+
+            // Save to Quiz History
+            const now = new Date();
+            const dateFormatted = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            const record = {
+                id: Date.now(),
+                date: dateFormatted,
+                mode: activeQuiz.mode === 'tryout' ? 'Tryout CAT' : 'Latihan Santai',
+                category: activeQuiz.category,
+                convTWK,
+                convTIU,
+                convTKP,
+                convertedTotal,
+                passed: isAllPassed
+            };
+
+            appState.quizHistory.unshift(record);
+            if (appState.quizHistory.length > 30) appState.quizHistory.pop();
+
+            // Record daily streak activity if at least 1 question answered
+            if (totalAnsweredThisSession > 0) {
+                recordDailyActivity('Menyelesaikan Latihan SKD');
+            } else {
+                saveState();
+            }
+
+            renderResultView(record, raw);
+            navigateTo('result');
+        }
+
+        function renderResultView(record, raw) {
+            const statusBadge = document.getElementById('result-status-badge');
+            if (record.passed) {
+                statusBadge.className = 'inline-flex items-center px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide bg-emerald-100 text-emerald-800 mb-2';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-check mr-1.5"></i> LULUS AMBANG BATAS (PASSING GRADE)';
+            } else {
+                statusBadge.className = 'inline-flex items-center px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide bg-red-100 text-red-800 mb-2';
+                statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> BELUM MEMENUHI PASSING GRADE';
+            }
+
+            document.getElementById('result-total-score').textContent = record.convertedTotal;
+
+            // Breakdown Grid
+            const breakdownGrid = document.getElementById('result-breakdown-grid');
+            breakdownGrid.innerHTML = '';
+
+            const subtests = [
+                { key: 'TWK', name: 'Tes Wawasan Kebangsaan', score: record.convTWK, pg: 65, max: 150, rawInfo: `${raw.TWK.correct}/${raw.TWK.count} Benar` },
+                { key: 'TIU', name: 'Tes Intelegensia Umum', score: record.convTIU, pg: 80, max: 175, rawInfo: `${raw.TIU.correct}/${raw.TIU.count} Benar` },
+                { key: 'TKP', name: 'Tes Karakteristik Pribadi', score: record.convTKP, pg: 166, max: 225, rawInfo: `${raw.TKP.score}/${raw.TKP.max} Poin Mentah` }
+            ];
+
+            subtests.forEach(st => {
+                if (st.score === null) return;
+                const passed = st.score >= st.pg;
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-2xl border ${passed ? 'bg-emerald-50/40 border-emerald-200' : 'bg-red-50/40 border-red-200'}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-extrabold text-sm text-slate-900">${st.key}</span>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                            ${passed ? 'LULUS' : 'TIDAK LULUS'}
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-3">${st.name}</p>
+                    <div class="flex items-baseline justify-between">
+                        <div>
+                            <span class="text-3xl font-extrabold ${passed ? 'text-emerald-700' : 'text-red-700'}">${st.score}</span>
+                            <span class="text-xs text-slate-400">/${st.max}</span>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-600">PG: ${st.pg}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-200/60">Capaian Sesi: ${st.rawInfo}</p>
+                `;
+                breakdownGrid.appendChild(card);
+            });
+
+            // Detailed Question Review
+            const reviewList = document.getElementById('result-review-list');
+            reviewList.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+
+            activeQuiz.questions.forEach((q, idx) => {
+                const userAns = activeQuiz.userAnswers[idx];
+                let statusPill = '';
+
+                if (q.category === 'TKP') {
+                    const pts = userAns !== undefined ? q.optionScores[userAns] : 0;
+                    statusPill = `<span class="px-2.5 py-1 rounded-md text-xs font-bold ${pts === 5 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">Skor Anda: ${pts}/5 Poin</span>`;
+                } else {
+                    const isCorrect = userAns !== undefined && userAns === q.correctIndex;
+                    statusPill = isCorrect
+                        ? `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-1"></i> Benar (+5)</span>`
+                        : `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800"><i class="fa-solid fa-xmark mr-1"></i> ${userAns === undefined ? 'Tidak Dijawab' : 'Salah'} (0)</span>`;
+                }
+
+                const optionsHtml = q.options.map((opt, oIdx) => {
+                    const isUserChoice = userAns === oIdx;
+                    let rowClass = 'bg-slate-50 border-slate-200 text-slate-700';
+                    let tag = '';
+
+                    if (q.category === 'TKP') {
+                        const sc = q.optionScores[oIdx];
+                        if (sc === 5) {
+                            rowClass = 'bg-emerald-50 border-emerald-400 text-emerald-950 font-semibold';
+                        } else if (isUserChoice) {
+                            rowClass = 'bg-amber-50 border-amber-400 text-amber-950 font-medium';
+                        }
+                        tag = `<span class="ml-auto text-xs font-bold px-2 py-0.5 rounded ${sc === 5 ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-200 text-slate-700'}">Poin ${sc} ${isUserChoice ? '(Pilihanmu)' : ''}</span>`;
+                    } else {
+                        if (oIdx === q.correctIndex) {
+                            rowClass = 'bg-emerald-50 border-emerald-400 text-emerald-950 font-semibold';
+                            tag = `<span class="ml-auto text-xs font-bold text-emerald-700">Kunci Jawaban ${isUserChoice ? '(Pilihanmu)' : ''}</span>`;
+                        } else if (isUserChoice) {
+                            rowClass = 'bg-red-50 border-red-400 text-red-950 font-medium';
+                            tag = `<span class="ml-auto text-xs font-bold text-red-700">Pilihanmu</span>`;
+                        }
+                    }
+
+                    return `
+                        <div class="p-3 rounded-xl border text-xs sm:text-sm flex items-start space-x-2.5 ${rowClass}">
+                            <span class="font-bold">${letters[oIdx]}.</span>
+                            <span class="flex-grow">${opt}</span>
+                            ${tag}
+                        </div>
+                    `;
+                }).join('');
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'p-5 rounded-2xl border border-slate-200 bg-white space-y-3';
+                itemDiv.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-extrabold text-navy-900">No. ${idx + 1} &bull; ${q.category} (${q.subtopic})</span>
+                        ${statusPill}
+                    </div>
+                    <p class="text-sm text-slate-800 font-medium whitespace-pre-line leading-relaxed">${q.question}</p>
+                    <div class="space-y-2 pt-1">${optionsHtml}</div>
+                    <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                        <strong class="text-blue-900 block mb-1"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Pembahasan:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+                reviewList.appendChild(itemDiv);
+            });
+        }
+
+        // ==================== 9. HISTORY & STATISTICS VIEW ====================
+        function renderHistoryView() {
+            const tbody = document.getElementById('history-table-body');
+            const chartContainer = document.getElementById('history-chart-container');
+
+            tbody.innerHTML = '';
+            chartContainer.innerHTML = '';
+
+            if (appState.quizHistory.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-10 text-center text-slate-400 text-sm">
+                            Belum ada riwayat pengerjaan tryout atau latihan. Mulai latihan pertama Anda sekarang!
+                        </td>
+                    </tr>
+                `;
+                chartContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center text-xs text-slate-400">Grafik akan muncul setelah Anda menyelesaikan minimal 1 latihan.</div>`;
+                return;
+            }
+
+            // Render Chart (Last 8 attempts in chronological order)
+            const recent = [...appState.quizHistory].slice(0, 8).reverse();
+            recent.forEach((rec, i) => {
+                const heightPct = Math.max(12, Math.min(100, Math.round((rec.convertedTotal / 550) * 100)));
+                const barColor = rec.passed ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-navy-700 hover:bg-navy-800';
+
+                const col = document.createElement('div');
+                col.className = 'flex flex-col items-center flex-1 min-w-[48px] h-full justify-end group';
+                col.innerHTML = `
+                    <span class="text-xs font-extrabold text-slate-800 mb-1">${rec.convertedTotal}</span>
+                    <div class="w-full max-w-[44px] rounded-t-lg transition-all duration-300 ${barColor}" style="height: ${heightPct}%" title="${rec.date} - Skor: ${rec.convertedTotal}"></div>
+                    <span class="text-[10px] text-slate-500 mt-1.5 truncate max-w-[60px]">Tes #${i + 1}</span>
+                `;
+                chartContainer.appendChild(col);
+            });
+
+            // Render Table Rows
+            appState.quizHistory.forEach(rec => {
+                const detailStr = [
+                    rec.convTWK !== null ? `TWK: ${rec.convTWK}` : null,
+                    rec.convTIU !== null ? `TIU: ${rec.convTIU}` : null,
+                    rec.convTKP !== null ? `TKP: ${rec.convTKP}` : null
+                ].filter(Boolean).join(' | ');
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/80 transition';
+                tr.innerHTML = `
+                    <td class="py-3.5 px-5 text-xs text-slate-600 font-medium">${rec.date}</td>
+                    <td class="py-3.5 px-5">
+                        <span class="font-bold text-slate-900 text-xs block">${rec.mode}</span>
+                        <span class="text-[11px] text-slate-500">Kategori: ${rec.category}</span>
+                    </td>
+                    <td class="py-3.5 px-5 text-xs font-medium text-slate-700">${detailStr}</td>
+                    <td class="py-3.5 px-5 font-extrabold text-navy-900">${rec.convertedTotal}</td>
+                    <td class="py-3.5 px-5">
+                        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${rec.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                            ${rec.passed ? 'Lulus PG' : 'Belum PG'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function confirmResetData() {
+            openModal(
+                'Reset Semua Data Belajar?',
+                'Tindakan ini akan menghapus seluruh riwayat tryout, progres materi, dan catatan Daily Streak Anda secara permanen.',
+                'Ya, Hapus Semua',
+                () => {
+                    localStorage.removeItem(STORAGE_KEY);
+                    appState = {
+                        streak: { count: 0, lastActiveDate: null, historyDates: [] },
+                        completedMateri: [],
+                        quizHistory: [],
+                        stats: { totalQuestionsAnswered: 0, twkTiuCorrect: 0, twkTiuTotal: 0 }
+                    };
+                    updateDashboardUI();
+                    renderHistoryView();
+                    showToast('Seluruh data progres berhasil direset.', 'info');
+                },
+                true
+            );
+        }
+
+        // ==================== 10. INITIALIZATION ====================
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            updateDashboardUI();
+            renderMateri('ALL');
+        });
+    </script>
+</body>
+</html>
